@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results - Tech Polls</title>
+    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="tech-container">
+        <div class="header-glitch">
+            <h1 class="main-title">RESULTS</h1>
+            <div class="subtitle">VOTE ANALYSIS COMPLETE</div>
+        </div>
+
+        <div class="results-card">
+            <div class="question-header">
+                <div class="question-badge">POLL COMPLETE</div>
+                <h2 class="question-text">{{ question.question_text }}</h2>
+            </div>
+
+            <div class="results-list">
+                {% for choice in question.choice_set.all %}
+                    {% with percentage=choice.percentage %}
+                    <div class="result-item">
+                        <div class="choice-header">
+                            <span class="choice-text">{{ choice.choice_text }}</span>
+                            <span class="votes-count">
+                                {{ choice.votes }} VOTE{{ choice.votes|pluralize|upper }}
+                            </span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ percentage }}%"></div>
+                            </div>
+                            <div class="progress-percentage">{{ percentage|floatformat:1 }}%</div>
+                        </div>
+                    </div>
+                    {% endwith %}
+                {% endfor %}
+            </div>
+
+            <div class="results-footer">
+                <div class="total-votes">
+                    <span class="total-label">TOTAL VOTES:</span>
+                    <span class="total-number">{{ question.total_votes }}</span>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="{% url 'polls:detail' question.id %}" class="tech-btn primary">
+                        <span class="btn-icon">↻</span>
+                        VOTE AGAIN
+                    </a>
+                    <a href="{% url 'polls:index' %}" class="tech-btn secondary">
+                        <span class="btn-icon">←</span>
+                        MAIN MENU
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+// Brighter matrix background effect
+function createMatrix() {
+    const container = document.createElement('div');
+    container.className = 'matrix-bg';
+    document.body.appendChild(container);
+
+    const characters = '01010101010101010101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const columns = Math.floor(window.innerWidth / 18); /* Более плотно */
+
+    for (let i = 0; i < columns; i++) {
+        const column = document.createElement('div');
+        column.className = 'matrix-column';
+        column.style.left = (i * 18) + 'px';
+        column.style.animationDuration = (Math.random() * 4 + 2) + 's'; /* Быстрее */
+        column.style.animationDelay = (Math.random() * 2) + 's';
+
+        for (let j = 0; j < 35; j++) { /* Больше символов в колонке */
+            const char = document.createElement('span');
+            char.textContent = characters.charAt(Math.floor(Math.random() * characters.length));
+
+            /* Ярче и с вариацией прозрачности */
+            const opacity = 0.3 + Math.random() * 0.4; /* 0.3-0.7 */
+            char.style.opacity = opacity.toFixed(2);
+            char.style.fontWeight = Math.random() > 0.7 ? '600' : '400'; /* Некоторые жирнее */
+
+            column.appendChild(char);
+            column.appendChild(document.createElement('br'));
+        }
+
+        container.appendChild(column);
+    }
+}
+
+// Initialize matrix when page loads
+document.addEventListener('DOMContentLoaded', createMatrix);
+
+// Recreate on resize
+window.addEventListener('resize', createMatrix);
+</script>
+</body>
+</html>

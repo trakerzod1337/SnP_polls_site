@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Polls</title>
+    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="tech-container">
+        <div class="header-glitch">
+            <h1 class="main-title">POLL SYSTEM</h1>
+            <div class="subtitle">DIGITAL VOTING PLATFORM</div>
+        </div>
+
+            <div class="polls-grid">
+                {% for question in latest_question_list %}
+                <div class="poll-card">
+                    <div class="card-content">
+                        <div class="question-number">QUESTION #{{ forloop.counter }}</div>
+                        <h3 class="question-text">{{ question.question_text }}</h3>
+                        <a href="{% url 'polls:detail' question.id %}" class="vote-btn">
+                            <span class="btn-text">ACCESS POLL</span>
+                            <span class="btn-arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+    </div>
+
+<script>
+// Brighter matrix background effect
+function createMatrix() {
+    const container = document.createElement('div');
+    container.className = 'matrix-bg';
+    document.body.appendChild(container);
+
+    const characters = '01010101010101010101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const columns = Math.floor(window.innerWidth / 18); /* Более плотно */
+
+    for (let i = 0; i < columns; i++) {
+        const column = document.createElement('div');
+        column.className = 'matrix-column';
+        column.style.left = (i * 18) + 'px';
+        column.style.animationDuration = (Math.random() * 4 + 2) + 's'; /* Быстрее */
+        column.style.animationDelay = (Math.random() * 2) + 's';
+
+        for (let j = 0; j < 35; j++) { /* Больше символов в колонке */
+            const char = document.createElement('span');
+            char.textContent = characters.charAt(Math.floor(Math.random() * characters.length));
+
+            /* Ярче и с вариацией прозрачности */
+            const opacity = 0.3 + Math.random() * 0.4; /* 0.3-0.7 */
+            char.style.opacity = opacity.toFixed(2);
+            char.style.fontWeight = Math.random() > 0.7 ? '600' : '400'; /* Некоторые жирнее */
+
+            column.appendChild(char);
+            column.appendChild(document.createElement('br'));
+        }
+
+        container.appendChild(column);
+    }
+}
+
+// Initialize matrix when page loads
+document.addEventListener('DOMContentLoaded', createMatrix);
+
+// Recreate on resize
+window.addEventListener('resize', createMatrix);
+</script>
+</body>
+</html>

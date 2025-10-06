@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote - Tech Polls</title>
+    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="tech-container">
+        <div class="header-glitch">
+            <h1 class="main-title">CAST VOTE</h1>
+            <div class="subtitle">SELECT YOUR CHOICE</div>
+        </div>
+
+        <form action="{% url 'polls:vote' question.id %}" method="post" class="vote-form">
+            {% csrf_token %}
+
+            <div class="form-card">
+                <div class="question-header">
+                    <div class="question-badge">ACTIVE POLL</div>
+                    <h2 class="question-text">{{ question.question_text }}</h2>
+                </div>
+
+                {% if error_message %}
+                <div class="error-alert">
+                    <div class="error-icon">⚠</div>
+                    <div class="error-text">{{ error_message }}</div>
+                </div>
+                {% endif %}
+
+                <div class="choices-grid">
+                    {% for choice in question.choice_set.all %}
+                    <div class="choice-item">
+                        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" class="choice-input">
+                        <label for="choice{{ forloop.counter }}" class="choice-label">
+                            <span class="choice-radio"></span>
+                            <span class="choice-text">{{ choice.choice_text }}</span>
+                            <span class="choice-number">#{{ forloop.counter }}</span>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-footer">
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">EXECUTE VOTE</span>
+                        <span class="btn-pulse"></span>
+                    </button>
+
+                    <a href="{% url 'polls:index' %}" class="back-link">
+                        <span class="back-icon">←</span>
+                        RETURN TO MENU
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+<script>
+// Brighter matrix background effect
+function createMatrix() {
+    const container = document.createElement('div');
+    container.className = 'matrix-bg';
+    document.body.appendChild(container);
+
+    const characters = '01010101010101010101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const columns = Math.floor(window.innerWidth / 18); /* Более плотно */
+
+    for (let i = 0; i < columns; i++) {
+        const column = document.createElement('div');
+        column.className = 'matrix-column';
+        column.style.left = (i * 18) + 'px';
+        column.style.animationDuration = (Math.random() * 4 + 2) + 's'; /* Быстрее */
+        column.style.animationDelay = (Math.random() * 2) + 's';
+
+        for (let j = 0; j < 35; j++) { /* Больше символов в колонке */
+            const char = document.createElement('span');
+            char.textContent = characters.charAt(Math.floor(Math.random() * characters.length));
+
+            /* Ярче и с вариацией прозрачности */
+            const opacity = 0.3 + Math.random() * 0.4; /* 0.3-0.7 */
+            char.style.opacity = opacity.toFixed(2);
+            char.style.fontWeight = Math.random() > 0.7 ? '600' : '400'; /* Некоторые жирнее */
+
+            column.appendChild(char);
+            column.appendChild(document.createElement('br'));
+        }
+
+        container.appendChild(column);
+    }
+}
+
+// Initialize matrix when page loads
+document.addEventListener('DOMContentLoaded', createMatrix);
+
+// Recreate on resize
+window.addEventListener('resize', createMatrix);
+</script>
+</body>
+</html>
