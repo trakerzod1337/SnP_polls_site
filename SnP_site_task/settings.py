@@ -25,6 +25,7 @@ SECRET_KEY = 'django-insecure-=0s7k0h8d%z%+7z3iqq$=bnj@4k&d7b7qc-ar)y533z*_b&%rb
 # SECURITY WARNING: don't run with debug turned on in production!
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEBUG = False
 ALLOWED_HOSTS = ['*']
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'SnP_site_task.urls'
